@@ -1,0 +1,115 @@
+﻿@model List<ApplicationUser>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h2 class="mb-0">
+            <i class="fas fa-users me-2"></i>User Management
+        </h2>
+    </div>
+    <div class="card-body">
+        <div class="toolbar">
+            <button class="btn btn-primary" onclick="submitForm('block')">
+                <i class="fas fa-ban me-2"></i>Block
+            </button>
+            <button class="btn btn-success" onclick="submitForm('unblock')">
+                <i class="fas fa-lock-open me-2"></i>Unblock
+            </button>
+            <button class="btn btn-danger" onclick="submitForm('delete')">
+                <i class="fas fa-trash me-2"></i>Delete
+            </button>
+        </div>
+
+        <form id="userForm" method="post">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="selectAll">
+                                </div>
+                            </th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Last Login</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" name="selectedUsers" value="@user.Id">
+                                    </div>
+                                </td>
+                                <td>
+                                    <i class="fas fa-user me-2"></i>@user.UserName
+                                </td>
+                                <td>
+                                    <i class="fas fa-envelope me-2"></i>@user.Email
+                                </td>
+                                <td>
+                                    <i class="fas fa-clock me-2"></i>
+                                    @(user.LastLoginTime.HasValue ? user.LastLoginTime.Value.ToString("yyyy-MM-dd HH:mm") : "Never")
+                                </td>
+                                <td>
+                                    @if (user.IsBlocked)
+                                    {
+                                        <span class="status-badge status-blocked">
+                                            <i class="fas fa-ban me-1"></i>Blocked
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge status-active">
+                                            <i class="fas fa-check-circle me-1"></i>Active
+                                        </span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $("#selectAll").click(function() {
+                $("input[name='selectedUsers']").prop('checked', this.checked);
+            });
+
+            // Update select all checkbox state based on individual checkboxes
+            $("input[name='selectedUsers']").click(function() {
+                var allChecked = $("input[name='selectedUsers']").length === 
+                               $("input[name='selectedUsers']:checked").length;
+                $("#selectAll").prop('checked', allChecked);
+            });
+        });
+
+        function submitForm(action) {
+            var selectedUsers = $("input[name='selectedUsers']:checked").length;
+            if (selectedUsers === 0) {
+                alert("Please select at least one user");
+                return;
+            }
+
+            if (action === 'delete' && !confirm('Are you sure you want to delete the selected users?')) {
+                return;
+            }
+
+            if (action === 'block') {
+                $("#userForm").attr("action", "@Url.Action("BlockUsers")").submit();
+            } else if (action === 'unblock') {
+                $("#userForm").attr("action", "@Url.Action("UnblockUsers")").submit();
+            } else if (action === 'delete') {
+                $("#userForm").attr("action", "@Url.Action("DeleteUsers")").submit();
+            }
+        }
+    </script>
+}
