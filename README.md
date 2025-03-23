@@ -50,7 +50,7 @@ dotnet run
 
 5. Open your browser and navigate to:
 ```
-https://localhost:5001
+https://localhost:5166
 ```
 
 ## Project Structure
