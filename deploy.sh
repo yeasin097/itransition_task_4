@@ -9,7 +9,7 @@ set -e
 APP_NAME="Task4"
 APP_DIR="/home/$USER/task4"
 PUBLISH_DIR="$APP_DIR/publish"
-SQL_SA_PASSWORD="MySecurePass123!"  # Password meeting SQL Server requirements
+SQL_SA_PASSWORD="@SRock3700x"  # Password meeting SQL Server requirements
 SERVER_IP=$(curl -s ifconfig.me)  # Automatically detect the server's public IP
 APP_PORT=5166  # Port for the application
 
