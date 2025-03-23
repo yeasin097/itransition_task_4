@@ -18,6 +18,9 @@ WORKDIR /app
 # Copy published files from build stage
 COPY --from=build /app/publish .
 
+# Create directory for SQLite database
+RUN mkdir -p /app/Data
+
 # Set environment variables
 ENV ASPNETCORE_URLS=http://+:80
 ENV ASPNETCORE_ENVIRONMENT=Production
